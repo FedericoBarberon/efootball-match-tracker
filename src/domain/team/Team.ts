@@ -37,6 +37,14 @@ export class Team {
         return Ok(undefined)
     }
 
+    archive() {
+        this.edit({ isArchived: true })
+    }
+
+    unarchive() {
+        this.edit({ isArchived: false })
+    }
+
     private validate(): Result<void, DomainError> {
         if (this.name === "") return Err(new InvalidTeamNameError)
 
