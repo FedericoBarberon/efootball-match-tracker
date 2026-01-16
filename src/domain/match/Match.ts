@@ -45,6 +45,29 @@ export class Match {
         return Ok(match)
     }
 
+    edit(props: {
+        homePlayer?: string
+        awayPlayer?: string
+        homeTeamId?: TeamId
+        awayTeamId?: TeamId
+        homeGoals?: number
+        awayGoals?: number
+        date?: Date
+    }): Result<void, DomainError> {
+        this.homePlayer = props.homePlayer ? formatName(props.homePlayer) : this.homePlayer
+        this.awayPlayer = props.awayPlayer ? formatName(props.awayPlayer) : this.awayPlayer
+        this.homeTeamId = props.homeTeamId ?? this.homeTeamId
+        this.awayTeamId = props.awayTeamId ?? this.awayTeamId
+        this.homeGoals = props.homeGoals ?? this.homeGoals
+        this.awayGoals = props.awayGoals ?? this.awayGoals
+        this.date = props.date ?? this.date
+
+        const validation = this.validate()
+        if (!validation.ok) return validation
+
+        return Ok(undefined)
+    }
+
     private validate(): Result<void, DomainError> {
         if (this.homePlayer === "" || this.awayPlayer === "") return Err(new InvalidPlayerNameError)
         if (this.homePlayer === this.awayPlayer) return Err(new SamePlayerError)

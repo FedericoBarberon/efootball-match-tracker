@@ -24,9 +24,23 @@ export class Team {
         return Ok(team)
     }
 
+    edit(props: {
+        name?: string
+        isArchived?: boolean
+    }): Result<void, DomainError> {
+        this.name = props.name ? formatName(props.name) : this.name
+        this.isArchived = props.isArchived ?? this.isArchived
+
+        const validation = this.validate()
+        if (!validation.ok) return validation
+
+        return Ok(undefined)
+    }
+
     private validate(): Result<void, DomainError> {
         if (this.name === "") return Err(new InvalidTeamNameError)
 
         return Ok(undefined)
     }
+
 }
