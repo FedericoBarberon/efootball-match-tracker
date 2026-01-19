@@ -6,7 +6,8 @@
     "lib": [
       "ES2022",
       "DOM",
-      "DOM.Iterable"
+      "DOM.Iterable",
+      "ES2023.Array"
     ],
     "module": "ESNext",
     "types": [
