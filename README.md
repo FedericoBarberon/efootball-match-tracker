@@ -1,73 +1,97 @@
-# React + TypeScript + Vite
+# eFootball Match Tracker Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based frontend application for tracking eFootball matches and teams,
+built with a clean architecture approach.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Dashboard**: View match history, general statistics, and player standings
+- **Match Management**: Create, view, and delete matches with filtering
+  capabilities
+- **Team Management**: Create, edit, archive/unarchive, and delete teams
+- **Data Export**: Download match data as CSV
+- **Responsive UI**: Built with TailwindCSS for a modern, responsive design
+- **Clean Architecture**: Organized into domain, application, infrastructure,
+  and presentation layers
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+- **React 19** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **TailwindCSS** - Styling
+- **Tanstack Query** - Data fetching and state management
+- **Wouter** - Lightweight routing
+- **PapaParse** - CSV parsing for data export
+- **React Hot Toast** - Notifications
+- **React Icons** - Icon library
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Ensure you have [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/)
+   installed
+2. Clone the repository
+3. Navigate to the frontend directory: `cd frontend`
+4. Install dependencies: `pnpm install`
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Usage
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Development
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Start the development server:
+
+```bash
+pnpm dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The application will be available at `http://localhost:5173`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Build for Production
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm build
 ```
+
+### Preview Production Build
+
+```bash
+pnpm preview
+```
+
+### Linting
+
+```bash
+pnpm lint
+```
+
+## Project Structure
+
+```
+src/
+├── application/          # Application layer
+│   ├── commands.ts       # Application commands
+│   ├── dto/              # Data Transfer Objects
+│   └── orchestrators/    # Business logic orchestrators
+├── core/                 # Core utilities
+├── domain/               # Domain layer
+│   ├── match/            # Match domain
+│   └── team/             # Team domain
+├── infra/                # Infrastructure layer
+│   ├── localStorage/     # Local storage repositories
+│   └── memory/           # In-memory repositories
+└── presentation/         # Presentation layer
+    ├── components/       # Reusable UI components
+    ├── pages/            # Page components
+    ├── queries/          # TanstackQuery hooks
+    └── utils/            # Presentation utilities
+```
+
+## Architecture
+
+This project follows Clean Architecture principles:
+
+- **Domain**: Contains business entities, value objects, and repository
+  interfaces
+- **Application**: Contains use cases, commands, and orchestrators
+- **Infrastructure**: Contains repository implementations and external concerns
+- **Presentation**: Contains UI components, pages, and React-specific code
