@@ -1,5 +1,5 @@
-import type { Match, MatchId } from "../domain/match/Match";
-import type { MatchRepository } from "../domain/match/MatchRepository";
+import type { Match, MatchId } from "@/domain/match/Match";
+import type { MatchRepository } from "@/domain/match/MatchRepository";
 
 export class InMemoryMatchRepository implements MatchRepository {
     private matches: Match[]

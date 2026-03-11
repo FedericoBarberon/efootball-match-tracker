@@ -1,29 +1,36 @@
-import type { Match } from "../../domain/match/Match"
-import type { Team } from "../../domain/team/Team"
+import type { Match } from "@/domain/match/Match";
+import { Team } from "@/domain/team/Team";
 
 export type MatchHistoryItemDTO = {
-    id: string
-    homePlayer: string
+    id: string;
+    homePlayer: string;
     homeTeam: {
-        id: string
-        name: string
-    }
-    homeGoals: number
-    awayPlayer: string
+        id: string;
+        name: string;
+        isArchived: boolean;
+    };
+    homeGoals: number;
+    awayPlayer: string;
     awayTeam: {
-        id: string
-        name: string
-    }
-    awayGoals: number
-    date: string // ISO
-}
+        id: string;
+        name: string;
+        isArchived: boolean;
+    };
+    awayGoals: number;
+    date: string; // ISO
+};
 
-const DEFAULT_TEAM = {
-    id: "NONE",
-    name: "UNKNOWN_TEAM"
-}
+const DEFAULT_TEAM = (() => {
+    const res = Team.create({ id: "NONE", name: "UNKNOWN_TEAM" });
+    if (!res.ok) throw Error("FAILED");
+    return res.value;
+})();
 
-export function toMatchHistoryItemDTO(match: Match, homeTeam: Team | null, awayTeam: Team | null): MatchHistoryItemDTO {
+export function toMatchHistoryItemDTO(
+    match: Match,
+    homeTeam: Team | null,
+    awayTeam: Team | null,
+): MatchHistoryItemDTO {
     return {
         id: match.id,
         homePlayer: match.homePlayer,
@@ -32,6 +39,6 @@ export function toMatchHistoryItemDTO(match: Match, homeTeam: Team | null, awayT
         awayPlayer: match.awayPlayer,
         awayTeam: awayTeam ?? DEFAULT_TEAM,
         awayGoals: match.awayGoals,
-        date: match.date.toISOString()
-    }
+        date: match.date.toISOString(),
+    };
 }

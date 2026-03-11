@@ -1,48 +1,59 @@
-import { Match, type MatchId } from "../../domain/match/Match";
-import type { MatchRepository } from "../../domain/match/MatchRepository";
+import { Match, type MatchId } from "@/domain/match/Match";
+import type { MatchRepository } from "@/domain/match/MatchRepository";
 import type { CreateMatchCommand, UpdateMatchCommand } from "../commands";
+import type { TeamId } from "@/domain/team/Team";
 
 export class MatchService {
-    constructor(private readonly repo: MatchRepository) { }
+    constructor(private readonly repo: MatchRepository) {}
 
     async create(data: CreateMatchCommand): Promise<MatchId> {
-        const id = crypto.randomUUID()
-        const result = Match.create({ id, ...data })
+        const id = crypto.randomUUID();
+        const result = Match.create({ id, ...data });
 
         if (!result.ok) {
-            throw result.err
+            throw result.err;
         }
 
-        await this.repo.save(result.value)
+        await this.repo.save(result.value);
 
-        return id
+        return id;
     }
 
     async getAll(): Promise<Match[]> {
-        return this.repo.getAll()
+        return this.repo.getAll();
     }
 
     async getById(id: MatchId): Promise<Match | null> {
-        const match = await this.repo.getById(id)
+        const match = await this.repo.getById(id);
 
-        return match
+        return match;
     }
 
     async delete(id: MatchId): Promise<void> {
-        this.repo.delete(id)
+        this.repo.delete(id);
     }
 
     async update(id: MatchId, data: UpdateMatchCommand): Promise<void> {
-        const match = await this.repo.getById(id)
+        const match = await this.repo.getById(id);
 
         if (!match) {
-            throw new Error(`Match with id ${id} not found`)
+            throw new Error(`Match with id ${id} not found`);
         }
 
-        const result = match.edit(data)
+        const result = match.edit(data);
 
-        if (!result.ok) throw result.err
+        if (!result.ok) throw result.err;
 
-        this.repo.save(match)
+        this.repo.save(match);
+    }
+
+    async deleteMatchesWithTeam(teamId: TeamId): Promise<void> {
+        const matches = await this.getAll();
+
+        matches.forEach(async (match) => {
+            if (match.homeTeamId === teamId || match.awayTeamId === teamId) {
+                await this.delete(match.id);
+            }
+        });
     }
 }

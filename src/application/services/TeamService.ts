@@ -1,47 +1,63 @@
 import type { CreateTeamCommand } from "../commands";
-import { Team, type TeamId } from "../../domain/team/Team";
-import type { TeamRepository } from "../../domain/team/TeamRepository";
+import { Team, type TeamId } from "@/domain/team/Team";
+import type { TeamRepository } from "@/domain/team/TeamRepository";
 
 export class TeamService {
-    constructor(private readonly repo: TeamRepository) { }
+    constructor(private readonly repo: TeamRepository) {}
 
     async create(data: CreateTeamCommand): Promise<TeamId> {
-        const id = crypto.randomUUID()
-        const result = Team.create({ id, ...data })
+        const id = crypto.randomUUID();
+        const result = Team.create({ id, ...data });
 
-        if (!result.ok) throw result.err
+        if (!result.ok) throw result.err;
 
-        this.repo.save(result.value)
-        return id
+        this.repo.save(result.value);
+        return id;
     }
 
     async getAll(): Promise<Team[]> {
-        return this.repo.getAll()
+        return this.repo.getAll();
     }
 
     async getById(id: TeamId): Promise<Team | null> {
-        return this.repo.getById(id)
+        return this.repo.getById(id);
     }
 
     async delete(id: TeamId): Promise<void> {
-        await this.repo.delete(id)
+        const team = await this.getById(id);
+
+        if (!team) throw new Error(`Team with id ${id} not found`);
+
+        if (!team.isArchived) {
+            throw new Error("Cannot delete a team that is not archived");
+        }
+        await this.repo.delete(id);
+    }
+
+    async changeName(id: TeamId, newName: string): Promise<void> {
+        const team = await this.getById(id);
+
+        if (!team) throw new Error(`Team with id ${id} not found`);
+
+        team.changeName(newName);
+        this.repo.save(team);
     }
 
     async archive(id: TeamId): Promise<void> {
-        const team = await this.getById(id)
+        const team = await this.getById(id);
 
-        if (!team) throw new Error(`Team with id ${id} not found`)
+        if (!team) throw new Error(`Team with id ${id} not found`);
 
-        team.archive()
-        this.repo.save(team)
+        team.archive();
+        this.repo.save(team);
     }
 
     async unarchive(id: TeamId): Promise<void> {
-        const team = await this.getById(id)
+        const team = await this.getById(id);
 
-        if (!team) throw new Error(`Team with id ${id} not found`)
+        if (!team) throw new Error(`Team with id ${id} not found`);
 
-        team.unarchive()
-        this.repo.save(team)
+        team.unarchive();
+        this.repo.save(team);
     }
 }

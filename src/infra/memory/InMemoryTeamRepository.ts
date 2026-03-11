@@ -1,5 +1,5 @@
-import type { Team, TeamId } from "../domain/team/Team";
-import type { TeamRepository } from "../domain/team/TeamRepository";
+import type { Team, TeamId } from "@/domain/team/Team";
+import type { TeamRepository } from "@/domain/team/TeamRepository";
 
 export class InMemoryTeamRepository implements TeamRepository {
     private teams: Team[]

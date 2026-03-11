@@ -1,5 +1,5 @@
-import type { CreateMatchProps, UpdateMatchProps } from "../domain/match/Match"
-import type { CreateTeamProps, UpdateTeamProps } from "../domain/team/Team"
+import type { CreateMatchProps, UpdateMatchProps } from "@/domain/match/Match"
+import type { CreateTeamProps, UpdateTeamProps } from "@/domain/team/Team"
 
 // Match Commands
 export type CreateMatchCommand = Omit<CreateMatchProps, "id">

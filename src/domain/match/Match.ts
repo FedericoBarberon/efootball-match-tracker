@@ -1,5 +1,5 @@
-import { Err, Ok, type Result } from "../../core/result"
-import { formatName } from "../../utils/names"
+import { Err, Ok, type Result } from "@/core/result"
+import { formatName } from "@/utils/names"
 import { DomainError } from "../errors"
 import type { TeamId } from "../team/Team"
 import { InvalidGoalsError, InvalidPlayerNameError, SamePlayerError, SameTeamsError } from "./errors"
@@ -124,5 +124,22 @@ export class Match {
         if (this.awayGoals < 0) return Err(new InvalidGoalsError(this.awayGoals))
 
         return Ok(undefined)
+    }
+
+    toJSON(): MatchProps {
+        return {
+            id: this.id,
+            homePlayer: this.homePlayer,
+            homeTeamId: this.homeTeamId,
+            homeGoals: this.homeGoals,
+            awayPlayer: this.awayPlayer,
+            awayTeamId: this.awayTeamId,
+            awayGoals: this.awayGoals,
+            date: this.date
+        }
+    }
+
+    static fromJSON(json: Omit<MatchProps, "date"> & { date: string }): Result<Match, DomainError> {
+        return this.create({ ...json, date: new Date(json.date) })
     }
 }

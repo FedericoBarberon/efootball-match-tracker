@@ -1,4 +1,4 @@
-import type { MatchId } from "../../domain/match/Match"
+import type { MatchId } from "@/domain/match/Match"
 import type { CreateMatchCommand, UpdateMatchCommand } from "../commands"
 import { toMatchHistoryItemDTO, type MatchHistoryItemDTO } from "../dto/MatchHistoryItemDTO"
 import type { MatchService } from "../services/MatchService"
